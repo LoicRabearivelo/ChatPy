@@ -17,10 +17,10 @@ def Reception(client):
         req = client.recv(5000).decode('utf8')
         if not req:
             break
-        print(f">{req}")
+        print(f">{req}\n>", end="")
 
-Host = "192.168.1.14"
-Port = 4242
+Host = "localhost"
+Port = 3000
 
 server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
@@ -32,11 +32,13 @@ client, addrs = server.accept()
 print("Client Connecté")
 envoi = Thread(target=Send,args=[client])
 recep = Thread(target=Reception,args=[client])
-envoi.start()
 recep.start()
+envoi.start()
 
 recep.join()
+envoi.join()
 
-print('fin thread')
-client.close()
-server.close()
+server.close
+client.close
+
+

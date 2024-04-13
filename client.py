@@ -8,7 +8,7 @@
 from threading import Thread
 import socket
 
-Host = "192.168.1.14"
+Host = "localhost"
 Port = 4242
 
 server_client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -22,12 +22,15 @@ def Send(server_client):
 def Reception(server_client):
     while True:
         req = server_client.recv(5000).decode('utf8')
-        print(f">{req}")
+        print(f">{req}\n>", end="")
 
 envoi = Thread(target=Send,args=[server_client])
 recep = Thread(target=Reception,args=[server_client])
 envoi.start()
 recep.start()
 
-envoi.join()
+
 recep.join()
+envoi.join()
+
+server_client.close()
