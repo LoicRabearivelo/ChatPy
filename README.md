@@ -4,21 +4,52 @@
 Le but de ce Coding club est de réaliser une messagerie entre deux machines.
 
 
-
 ## Documentation
 
  - [Les Bases en Python](https://courspython.com/bases-python.html)
  - [Les Sockets en Python](https://docs.python.org/fr/3/howto/sockets.html)
  - [Les addresses IP](https://www.it-connect.fr/les-adresses-ip-pour-les-debutants/)
 
+## Étape 1
+Dans cette étape nous allons lancer un serveur socket qui attend une seule requête et envoie une réponse à la requête.
 
+- Créer la socket
+- Préciser l'addresse ip et le port (le serveur est sur le `localhost`)
+- Lier la socket à l'addresse ip et au port
+- Écouter sur le port
+- Accepter les futures requêtes
+- Choisir le message que l'on veut écrire (`"Hello World!"`)
+- Récupérer l'entré client avec la méthode `.fileno()`
+
+```bash
+# commande pour lancer une requête
+curl --http0.9 http://localhost:4242
+```
+
+## Étape 2
+
+```bash
+# commande pour baisser le pare-feu
+sudo systemctl stop firewalld
+```
+
+- ### Serveur.py
+    Lance un serveur socket et attends une connexion.
+    - Compléter la fonction `Send` qui envoie un message vers le client
+    - Compléter la fonction `Réception` qui récupère le message du client et l'affiche
+    - Compléter le port et l'ip (l'ip correspond à l'ip de la machine, n'oubliez pas de baisser le pare-feu)
+    - Créer les deux threads `envoi` et `recep`
+    - Commencer les threads et les joindre
+- ### Client.py
+    Se connecte au serveur socket.
+    - Compléter la fonction `Send` qui envoie un message vers le serveur
+    - Compléter la fonction `Réception` qui récupère le message du serveur et l'affiche
+    - Compléter le port et l'ip du serveur (n'oubliez pas de baisser le pare-feu)
+    - Créer les deux threads `envoi` et `recep`
+    - Commencer les threads et les joindre
 ## Les Sockets en Python
 
 Les sockets en Python permettent la communication bidirectionnelle entre des processus sur différentes machines ou sur la même machine via un réseau. Ils peuvent utiliser différents protocoles, tels que TCP ou UDP, pour la transmission de données.
-
-
-
-
 
 
 ### Exemple
@@ -102,7 +133,14 @@ def handle_client(client_socket):
     # Logique de traitement des données du client
     pass
 
-# Créer et démarrer un thread
+# Créer, démarrer et joindre un thread
+# 'target' est utiliser pour définir quel fonction est utiliser pour le threads
+# 'args' représente l'autre bout du threads, par exemple notre interlocuteur
 client_thread = Thread(target=handle_client, args=(client_socket,))
+
+# 'start' commencer le threads
 client_thread.start()
+
+#joindre les deux parties du threads
+client_thread.join()
 ```

@@ -1,44 +1,82 @@
-##
-## EPITECH
-## ChatPy
-## File description:
-## Server side
-##
-
-from threading import Thread
 import socket
+import os
+from threading import Thread
 
-def Send(client):
+def send(client: socket.socket):
     while True:
+        # affiche le prompt
         print(">", end="")
-        client.send(input().encode('utf8'))
-def Reception(client):
+
+        #utiliser la méthode input pour récupérer le message de l'utilisateur
+        message: str = input()
+
+        #ustiliser la méthode send avec 'message' pour envoyer un message au client
+        client.send(message.encode("utf-8"))
+
+        if message == 'exit':
+            print("[ATTENTION] déconnexion")
+            # fermer le serveur et la connéxion au client
+            server_socket.close()
+            socket_client.close()
+            exit(0)
+
+def Reception(client: socket.socket):
+
     while True:
-        req = client.recv(5000).decode('utf8')
-        if not req:
+        # récupérer le message du client
+        message: str = client.recv(1024).decode("utf-8")
+
+        # si jamais il n y'a pas de réponse on quitte la focntion
+        if not message:
             break
-        print(f">{req}\n>", end="")
 
-Host = "localhost"
-Port = 3000
+        if message == 'exit':
+            print("[ATTENTION] connexion rompue")
+            # fermer le serveur
+            server_socket.close()
+            exit(0)
 
-server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        # afficher le message du client
+        print(f">{message}\n>", end="")
 
-server.bind((Host,Port))
-server.listen(1)
+# Création de la socket
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-print("On attend des connexions")
-client, addrs = server.accept()
-print("Client Connecté")
-envoi = Thread(target=Send,args=[client])
-recep = Thread(target=Reception,args=[client])
-recep.start()
+# insérer l'ip
+host: str = "localhost"
+
+# insérer le port
+port: int = 4242
+
+
+# utiliser la méthode 'bind' pour lier la socket à l'ip et au port
+server_socket.bind((host, port))
+
+# utiliser la methode 'listen' pour écouter toutes les nouvelles tentatives de connection
+server_socket.listen(1)
+
+# afficher votre ip est sur quel port vous écouter
+print(f"host: {host}, port: {port}")
+
+# utiliser la methode 'accept' pour accepter les futurs connection
+socket_client, addresse_client = server_socket.accept()
+
+# créer les deux threads 'envoi' pour envoyer et 'recep' pour recevoir
+envoi = Thread(target=send, args=[socket_client])
+recep = Thread(target=Reception, args=[socket_client])
+
+# lancer les deux threads avec la méthode
 envoi.start()
+recep.start()
 
-recep.join()
+# attendre les messages
 envoi.join()
+recep.join()
 
-server.close
-client.close
+# close les serveurs
+server_socket.close()
+socket_client.close()
+
+
 
 

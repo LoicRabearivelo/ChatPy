@@ -2,25 +2,28 @@ import socket
 import os
 from threading import Thread
 
-def send(client):
+# envoyer des messages a son interlocuteur
+def send(client: socket.socket):
+
     while True:
         # affiche le prompt
         print(">", end="")
 
-        #utiliser la méthode input pour récupérer le message de l'utilisateur
+        #utiliser la méthode 'input' pour récupérer le message de l'utilisateur
         message: str = ...
 
-        #ustiliser la méthode send avec 'message' pour envoyer un message au client
+        #ustiliser la méthode 'send' avec 'message' pour envoyer un message au client
         client.send(message.encode("utf-8"))
 
         if message == 'exit':
-            print("[ATTENTION] déconnexion en cours...")
-            # fermer le serveur et la connéxion au client
+            print("[ATTENTION] déconnexion en cours")
+            # fermer le serveur et la connexion au client avec la méthode 'close'
             ...
             ...
             exit(0)
 
-def Reception(client):
+# reçevoir les messages de son interlocuteur
+def Reception(client: socket.socket):
 
     while True:
         # récupérer le message du client
@@ -31,8 +34,8 @@ def Reception(client):
             break
 
         if message == 'exit':
-            print("[ATTENTION] connéxion rompue")
-            # fermer le serveur
+            print("[ATTENTION] connexion rompue")
+            # fermer le serveur avec la méthode 'close'
             ...
             exit(0)
 
@@ -40,13 +43,13 @@ def Reception(client):
         print(f">{message}\n>", end="")
 
 # Création de la socket
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # insérer l'ip
-host = ...
+host: str = ...
 
 # insérer le port
-port = ...
+port: int = ...
 
 
 # utiliser la méthode 'bind' pour lier la socket à l'ip et au port
@@ -59,23 +62,22 @@ server_socket.listen(1)
 print(f"host: {host}, port: {port}")
 
 # utiliser la methode 'accept' pour accepter les futurs connection
-# indice utiliser la fonction fileno
-host_client, addresse_client = server_socket.accept()
+socket_client, addresse_client = server_socket.accept()
 
 # créer les deux threads 'envoi' pour envoyer et 'recep' pour recevoir
-envoi = ...
-recep = ...
+envoi: Thread = ...
+recep: Thread = ...
 
 
-# lancer les deux threads avec la méthode
-envoi.start()
+# lancer les deux threads avec la méthode 'start'
+...
 ...
 
-# attendre les messages
-envoi.join()
+# joindre les threads a celui de son interlocuteur avec la méthode 'join'
+...
 ...
 
-# close les serveurs
+# fermer les serveurs
 server_socket.close()
-host_client.close()
+socket_client.close()
 

@@ -2,13 +2,13 @@ import socket
 from os import write
 
 # Création de la socket
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket: socket.socket = ...
 
 # insérer l'ip
-host = ...
+host: str = ...
 
 # insérer le port
-port = ...
+port: int = ...
 
 
 # utiliser la méthode 'bind' pour lier la socket à l'ip et au port
@@ -21,15 +21,16 @@ port = ...
 ...
 
 # utiliser la methode 'accept' pour accepter les futurs connection
-# indice utiliser la fonction fileno
-host_client, addresse_client = ...
+# socket_client représente la socket du client
+# addresse_client représente son addresse (ip, port)
+socket_client, addresse_client = ...
 
 
 # insérer le message de bienvenue !
 message: str = ...
 
 # récuperer le l'entrée du client avec le méthode fileno
-entree_client: int = host_client.fileno()
+entree_client: int = ...
 
 # enfin avec la methode write on écrit notre messeg sur l'entrée du client
 write(entree_client, bytes(message.encode("utf-8")))
